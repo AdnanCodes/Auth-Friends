@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { axiosWithAuth } from "./axiosAuth";
 
-const Login = () => {
+const Login = props => {
   const [login, setLogin] = useState({
     username: "",
     password: ""
@@ -14,6 +15,15 @@ const Login = () => {
   const handleSubmit = e => {
     e.preventDefault();
     console.log("Form entered this: ", login);
+
+    axiosWithAuth()
+      .post(`http://localhost:5000/api/login`, login)
+      .then(res => {
+        localStorage.setItem("token", res.data.payload);
+        props.history.push("/friends");
+      })
+      .catch(err => console.log("Error in Login: ", err.response.data.error));
+
     setLogin({
       username: "",
       password: ""
@@ -30,7 +40,7 @@ const Login = () => {
           onChange={handleChange}
         />
         <input
-          type="text"
+          type="password"
           value={login.password}
           name="password"
           placeholder="Password"
