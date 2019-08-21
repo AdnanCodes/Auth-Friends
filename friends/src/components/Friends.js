@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { axiosWithAuth } from "./axiosAuth";
 
 const Friends = () => {
@@ -10,6 +10,9 @@ const Friends = () => {
     email: ""
   });
 
+  useEffect(() => {
+    getData();
+  }, []);
   const getData = () => {
     axiosWithAuth()
       .get(`http://localhost:5000/api/friends`)
@@ -36,12 +39,13 @@ const Friends = () => {
       .catch(err =>
         console.log("Error in POST Friend: ", err.response.data.error)
       );
+    getData();
   };
 
   return (
     <div>
       <h4>Here are some of your friends</h4>
-      <button onClick={() => getData()}>Get some Friends</button>
+      {/* <button onClick={() => getData()}>Get some Friends</button> */}
 
       <div className="login">
         <form onSubmit={handleSubmit}>
